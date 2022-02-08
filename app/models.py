@@ -1,12 +1,43 @@
+from email.policy import default
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from . import login_manager
 from datetime import datetime
+import enum
 
 @login_manager.user_loader
 def load_user(user_id):
   return User.query.get(int(user_id))
+
+
+class PitchCategoryEnum(enum.Enum):
+    pickupline = 'Pick Up Line'
+    interviewpitch = 'Interview Pitch'
+    productpitch = 'Product Pitch'
+    promotionpitch = 'Promotion Pitch'
+
+
+class Pitch(db.Model):
+    __tablename__ = 'pitches'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    category = db.Column(db.Enum(PitchCategoryEnum),
+                default=PitchCategoryEnum.productpitch,
+                nullable=False)
+    posted = db.Column(db.Time,default=datetime.utcnow())
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+
+
+    def save_pitch(self):
+        db.session.add(self)
+        db.session.commit()
+    
+
+    @classmethod
+    def get_pitches(cls, id):
+        pitches = Pitch.query.filter_by(user_id=id).all()
+        return pitches
 
 
 class User(UserMixin, db.Model):
