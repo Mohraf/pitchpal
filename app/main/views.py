@@ -1,14 +1,17 @@
+from unicodedata import category
 from flask import render_template, request, redirect, url_for, abort
 from . import main
 from flask_login import current_user, login_required
 from .. import db,photos
-from .forms import UpdateProfile
-from ..models import User, PhotoProfile
+from .forms import UpdateProfile, PitchForm
+from ..models import Pitch, User, PhotoProfile
+from datetime import datetime
 
 import markdown2
 
 
 @main.route('/')
+@login_required
 def index():
   '''
   view for root page that returns the index page and its data
@@ -17,7 +20,14 @@ def index():
   title = 'Home - Welcome to PitchPal'
   user = current_user.username
 
-  return render_template('index.html', title=title, user=user)
+  form = PitchForm()
+
+  if form.validate_on_submit():
+    pitch = Pitch(title=form.title.data, category=form.title.data, posted=datetime.now, user_id=user.id)
+    pitch.save_pitch()
+    return redirect(url_for(main.index))
+
+  return render_template('index.html', title=title, user=user, pitch_form=form)
 
 
 @main.route('/user/<uname>')
