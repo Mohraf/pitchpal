@@ -1,3 +1,4 @@
+from crypt import methods
 from unicodedata import category
 from flask import render_template, request, redirect, url_for, abort
 from . import main
@@ -10,7 +11,7 @@ from datetime import datetime
 import markdown2
 
 
-@main.route('/')
+@main.route('/', methods = ['GET', 'POST'])
 @login_required
 def index():
   '''
@@ -18,16 +19,16 @@ def index():
   '''
 
   title = 'Home - Welcome to PitchPal'
-  user = current_user.username
+  user = current_user
 
   form = PitchForm()
 
   if form.validate_on_submit():
-    pitch = Pitch(title=form.title.data, category=form.title.data, posted=datetime.now, user_id=user.id)
+    pitch = Pitch(title=form.title.data, category=form.category.data, user_id=user.id)
     pitch.save_pitch()
-    return redirect(url_for(main.index))
+    return redirect(url_for('.index'))
 
-  return render_template('index.html', title=title, user=user, pitch_form=form)
+  return render_template('index.html', title=title, user=user.username, pitch_form=form)
 
 
 @main.route('/user/<uname>')

@@ -1,6 +1,6 @@
 from unicodedata import category
 from flask_wtf import FlaskForm
-from wtforms import StringField,TextAreaField,SubmitField,ValidationError, SelectField
+from wtforms import StringField,TextAreaField,SubmitField,ValidationError, SelectField, TextField
 from wtforms.validators import Required,Email
 from ..models import User, Pitch
 
