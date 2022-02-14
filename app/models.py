@@ -38,7 +38,12 @@ class Pitch(db.Model):
     def get_pitches(cls, id):
         pitches = Pitch.query.filter_by(user_id=id).all()
         return pitches
+    
 
+    @classmethod
+    def get_all_pitches(cls):
+        pitches = Pitch.query.all()
+        return pitches
 
 
 class PhotoProfile(db.Model):

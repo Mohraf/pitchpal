@@ -20,6 +20,8 @@ def index():
 
   title = 'Home - Welcome to PitchPal'
   user = current_user
+#   users = User
+  pitches = Pitch.get_all_pitches()
 
   form = PitchForm()
 
@@ -28,7 +30,7 @@ def index():
     pitch.save_pitch()
     return redirect(url_for('.index'))
 
-  return render_template('index.html', title=title, user=user.username, pitch_form=form)
+  return render_template('index.html', title=title, user=user.username, pitch_form=form, pitches=pitches)
 
 
 @main.route('/user/<uname>')

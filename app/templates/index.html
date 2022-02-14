@@ -22,6 +22,17 @@
 
     {{wtf.quick_form(pitch_form)}}
   </div>
+
+  <div class="row">
+    <hr>
+    {% for pitch in pitches %}
+      <div class="container row pitch-card">
+        <h4>{{pitch.title}}</h4>
+        <p>{{pitch.category}}</p>
+        <p>Posted at: {{pitch.posted}}</p>
+      </div>
+    {% endfor %}
+  </div>
 </div>
 
 {% endblock%}
